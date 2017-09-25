@@ -59,7 +59,11 @@ class PlopService(ConsumerMixin):
 
     def send_logstash(self, etl_data):
         try:
-            data = json.dumps(etl_data) + "\n"
+            new_data = etl_data.copy()
+            if '_id' in new_data:
+                del new_data['_id']
+            data = json.dumps(new_data) + "\n"
+
             if self.logstash_uri.find('udp') == 0:
                 ip = self.logstash_uri.split('://')[1].split(":")[0]
                 port = int(self.logstash_uri.split('://')[1].split(":")[1])
