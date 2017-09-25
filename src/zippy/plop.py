@@ -59,13 +59,13 @@ class PlopService(ConsumerMixin):
 
     def send_logstash(self, etl_data):
         try:
-            if self.logstash_uri.find('udp'):
+            if self.logstash_uri.find('udp') == 0:
                 ip = self.logstash_uri.split('://')[1].split(":")[0]
                 port = int(self.logstash_uri.split('://')[1].split(":")[1])
                 logging.debug("Sending data to UDP %s:%s" % (ip, port))
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 sock.sendto(etl_data, (ip, port))
-            if self.logstash_uri.find('tcp'):
+            elif self.logstash_uri.find('tcp') == 0:
                 ip = self.logstash_uri.split('://')[1].split(":")[0]
                 port = int(self.logstash_uri.split('://')[1].split(":")[1])
                 logging.debug("Sending data to TCP %s:%s" % (ip, port))
@@ -76,6 +76,7 @@ class PlopService(ConsumerMixin):
             tb = traceback.format_exc()
             logging.debug("[XXX] Error: "+tb)
             logging.debug("Failed to send etl_data to logstash")
+            raise
 
     def process_and_report(self, incoming_msg):
         logging.debug("Processing and report syslog_msg")
