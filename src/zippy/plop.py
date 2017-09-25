@@ -43,8 +43,6 @@ class PlopService(ConsumerMixin):
                         if callback is not None:
                             data = callback(message.payload)
                             msgs.append(data)
-                            logging.debug("made it here 2")
-                            logging.debug(data)
                         message.ack()
                     except Queue.Empty:
                         logging.debug("%s queue is empty" % queue)
@@ -62,13 +60,13 @@ class PlopService(ConsumerMixin):
     def send_logstash(self, etl_data):
         try:
             if self.logstash_uri.find('udp'):
-                ip = int(self.logstash_uri.split('://')[1].split(":")[0])
+                ip = self.logstash_uri.split('://')[1].split(":")[0]
                 port = int(self.logstash_uri.split('://')[1].split(":")[1])
                 logging.debug("Sending data to UDP %s:%s" % (ip, port))
                 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 sock.sendto(etl_data, (ip, port))
             if self.logstash_uri.find('tcp'):
-                ip = int(self.logstash_uri.split('://')[1].split(":")[0])
+                ip = self.logstash_uri.split('://')[1].split(":")[0]
                 port = int(self.logstash_uri.split('://')[1].split(":")[1])
                 logging.debug("Sending data to TCP %s:%s" % (ip, port))
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
