@@ -5,13 +5,6 @@ import sys
 from zippy.plop import PlopService as Plop
 
 
-logging.getLogger().setLevel(logging.DEBUG)
-ch = logging.StreamHandler(sys.stdout)
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(message)s')
-ch.setFormatter(formatter)
-logging.getLogger().addHandler(ch)
-
 parser = argparse.ArgumentParser(
                       description='Start Kombu to logstash captures.')
 #  Hitter stuff
@@ -31,12 +24,19 @@ parser.add_argument('-logstash_uri', type=str, default=Plop.LOGSTASH_URI,
 V = 'log levels: INFO: %d, DEBUG: %d, WARRNING: %d' % (logging.INFO,
                                                        logging.DEBUG,
                                                        logging.WARNING)
-parser.add_argument('-log_level', type=int, default=logging.ALERT,
+parser.add_argument('-log_level', type=int, default=logging.DEBUG,
                     help=V)
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
+
+    logging.getLogger().setLevel(args.log_level)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(message)s')
+    ch.setFormatter(formatter)
+    logging.getLogger().addHandler(ch)
 
     service = Plop(broker_uri=args.broker_uri,
                    broker_queue=args.broker_queue,
