@@ -18,14 +18,14 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-name', type=str, default=Plop.NAME,
                     help='name of service')
 parser.add_argument('-broker_uri', type=str,
-                    default=Plop.KOMBU_URI,
+                    default=Plop.BROKER_URI,
                     help='kombu queue address')
 parser.add_argument('-broker_queue', type=str,
-                    default=Plop.LOGSTASH_QUEUE,
+                    default=Plop.BROKER_QUEUE,
                     help='logstash queue to read from')
 parser.add_argument('-msg_limit', type=int, default=100,
                     help='limit the number of messages read')
-parser.add_argument('-logstash_uri', type=str, default=Plop.KOMBU_URI,
+parser.add_argument('-logstash_uri', type=str, default=Plop.LOGSTASH_URI,
                     help='logstash uri (udp, tcp, redis, or amqp)')
 
 V = 'log levels: INFO: %d, DEBUG: %d, WARRNING: %d' % (logging.INFO,
