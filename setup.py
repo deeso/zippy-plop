@@ -12,7 +12,7 @@ setup(name='zippy-plop',
       description=DESC,
       author='adam pridgen',
       author_email='dso@thecoverofnight.com',
-      install_requires=['kombu', ],
+      install_requires=['kombu', 'redis', 'toml'],
       packages=find_packages('src'),
       package_dir={'': 'src'},
 )

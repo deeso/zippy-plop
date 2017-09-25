@@ -5,7 +5,7 @@ import sys
 from zippy.plop import PlopService as Plop
 
 
-logging.getLogger().setLevel(logging.INFO)
+logging.getLogger().setLevel(logging.DEBUG)
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(message)s')
@@ -22,8 +22,9 @@ parser.add_argument('-broker_uri', type=str,
                     help='kombu queue address')
 parser.add_argument('-broker_queue', type=str,
                     default=Plop.LOGSTASH_QUEUE,
-                    help='kombu queue name to read from')
-
+                    help='logstash queue to read from')
+parser.add_argument('-msg_limit', type=int, default=100,
+                    help='limit the number of messages read')
 parser.add_argument('-logstash_uri', type=str, default=Plop.KOMBU_URI,
                     help='logstash uri (udp, tcp, redis, or amqp)')
 
@@ -40,7 +41,7 @@ if __name__ == "__main__":
     service = Plop(broker_uri=args.broker_uri,
                    broker_queue=args.broker_queue,
                    logstash_uri=args.logstash_uri,
-                   name=args.name)
+                   name=args.name, msg_limit=args.msg_limit)
 
     try:
         logging.debug("Starting the syslog listener")
